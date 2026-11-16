@@ -40,9 +40,9 @@ def handle_photo(message):
             "Jika koordinat tidak ditemukan, berikan alamat teks lengkapnya."
         )
 
-        # Panggil Gemini API menggunakan model terbaru gemini-2.0-flash
+        # Panggil Gemini API menggunakan model terbaru gemini-3.8-flash
         response = client.models.generate_content(
-            model='gemini-2.0-flash',
+            model='gemini-3.8-flash',
             contents=[
                 types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg'),
                 prompt
