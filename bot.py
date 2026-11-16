@@ -3,11 +3,9 @@ import telebot
 from google import genai
 from google.genai import types
 
-# Masukkan Token Bot Telegram Anda dari BotFather
-TELEGRAM_BOT_TOKEN = "MASUKKAN_TOKEN_TELEGRAM_DI_SINI"
-
-# Masukkan API Key Gemini pribadi Anda (dari aistudio.google.com)
-GEMINI_API_KEY = "MASUKKAN_API_KEY_GEMINI_DI_SINI"
+# Mengambil token dan API key langsung dari Environment Variables Railway
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Inisialisasi bot dan klien Gemini
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
@@ -42,9 +40,9 @@ def handle_photo(message):
             "Jika koordinat tidak ditemukan, berikan alamat teks lengkapnya."
         )
 
-        # Panggil Gemini API (menggunakan model gemini-2.5-flash)
+        # Panggil Gemini API
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-1.5-flash',
             contents=[
                 types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg'),
                 prompt
@@ -53,11 +51,11 @@ def handle_photo(message):
 
         result_text = response.text.strip()
         
-        # Kirim hasil ke Telegram
+        # Kirim hasil ke Telegram (Urutan argumen diperbaiki)
         bot.edit_message_text(
-            chat_index := message.chat.id,
-            message_id=sent_msg.message_id,
             text=f"📍 **Hasil Deteksi Lokasi:**\n\n{result_text}",
+            chat_id=message.chat.id,
+            message_id=sent_msg.message_id,
             parse_mode="Markdown"
         )
         
