@@ -3,7 +3,7 @@ import telebot
 from google import genai
 from google.genai import types
 
-# Mengambil token dan API key langsung dari Environment Variables Railway
+# Mengambil token dan API key dari Environment Variables Railway
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -40,9 +40,9 @@ def handle_photo(message):
             "Jika koordinat tidak ditemukan, berikan alamat teks lengkapnya."
         )
 
-        # Panggil Gemini API
+        # Panggil Gemini API menggunakan model terbaru gemini-2.0-flash
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-2.0-flash',
             contents=[
                 types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg'),
                 prompt
@@ -51,7 +51,7 @@ def handle_photo(message):
 
         result_text = response.text.strip()
         
-        # Kirim hasil ke Telegram (Urutan argumen diperbaiki)
+        # Kirim hasil ke Telegram
         bot.edit_message_text(
             text=f"📍 **Hasil Deteksi Lokasi:**\n\n{result_text}",
             chat_id=message.chat.id,
